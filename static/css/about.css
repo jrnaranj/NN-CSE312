@@ -1,0 +1,59 @@
+body {
+    background-color: darkslategrey;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+}
+
+.a-picture {
+    aspect-ratio: 1;
+    clip-path: polygon(6.7% 25%, 50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%);
+    width: 16vw;
+    min-width: 160px;
+}
+
+.a-info { 
+    aspect-ratio: 1;
+    clip-path: polygon(6.7% 25%, 50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%);
+    transform: scale(0.9); 
+    transition: transform 125ms ease-in 0s;
+    margin-right: -2vmax;
+    margin-top: -4vmax;
+}
+
+.a-info:hover {
+    transform: scale(1)
+}
+
+
+.picture-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+
+.a-indent {
+    min-width: 140px;
+    width: 14vmax;
+}
+
+.picture-container {
+    aspect-ratio: 1;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.author-desc {
+    opacity: 0;
+    display: none;
+    transition: opacity 250ms ease-in 500ms;
+}
+
+.author-desc:target {
+    display: block;
+    opacity: 1;
+}
+
+.a-break {
+    width: 100%;
+}
