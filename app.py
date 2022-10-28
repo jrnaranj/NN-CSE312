@@ -18,9 +18,11 @@ client = MongoClient(connection_string)
 db = client["CSE312_Game"] #The name of the database is CSE312_Game
 #db.create_collection("Game Data") #Method to create a new collection in the CSE312_Game database.
 
-db.create_collection("Login")
+
 
 login_collection = db["Login"]
+
+
 
 
 
@@ -29,6 +31,10 @@ print(connection_string)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/signin')
+def signin():
+    return render_template('login.html')
 
 @app.route('/about')
 def about():
@@ -48,10 +54,28 @@ def register():
     uploadData = {}
     uploadData["email"] = request.form.get("email")
     uploadData["password"] = request.form.get("password")
+    print(request.form.get("email"))
+    print(request.form.get("password"))
     #password not secure right now
 
     login_collection.insert_one(uploadData)
     return render_template('about.html')
+
+@app.route('/login',methods=["POST"])
+def login():
+   uploadData = {}
+   uploadData["email"] = request.form.get("email")
+   uploadData["password"] = request.form.get("password")
+   compare = login_collection.find_one(uploadData)
+
+   if compare == None:
+       return render_template("login.html")
+    
+   else:
+       del compare['_id']
+
+       if uploadData == compare:
+           return render_template("about.html")
 
 
 
