@@ -1,5 +1,5 @@
 from fileinput import filename
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -17,6 +17,10 @@ client = MongoClient(connection_string)
 
 db = client["CSE312_Game"] #The name of the database is CSE312_Game
 #db.create_collection("Game Data") #Method to create a new collection in the CSE312_Game database.
+
+db.create_collection("Login")
+
+login_collection = db["Login"]
 
 
 
@@ -38,6 +42,18 @@ def aboutCss(path):
 @app.route('/game')
 def index2():
     return render_template('index2.html')
+
+@app.route('/register', methods=["POST"])
+def register():
+    uploadData = {}
+    uploadData["email"] = request.form.get("email")
+    uploadData["password"] = request.form.get("password")
+    #password not secure right now
+
+    login_collection.insert_one(uploadData)
+    return render_template('about.html')
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=7878)
