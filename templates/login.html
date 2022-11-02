@@ -1,10 +1,12 @@
-<html>
-<head>
-    <title>Nautical Nonsense Rock Paper Scissors</title>
-</head>
+{% extends "navbar.html" %}
+{% block head %}
+{{ super() }}
+<title>Nautical Nonsense Rock Paper Scissors</title>
+{% endblock %}
 
-<body style = "text-align: center;">
 
+{% block content %}
+<div class="centerer" style="text-align: center;">
 <h1>Nautical Nonsense RPS Login</h1>
 
 <br><br><br>
@@ -22,7 +24,6 @@
     <input type="password" name="password"required><br>
     <br>
     <input type="submit" value="Login">
- </form>
-
-</body>
-</html>
+</form>
+</div>
+{% endblock %}
