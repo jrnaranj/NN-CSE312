@@ -1,5 +1,5 @@
 from fileinput import filename
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -20,11 +20,21 @@ db = client["CSE312_Game"] #The name of the database is CSE312_Game
 
 
 
+login_collection = db["Login"]
+
+
+
+
+
 print(connection_string)
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/signin')
+def signin():
+    return render_template('login.html')
 
 @app.route('/about')
 def about():
@@ -38,6 +48,36 @@ def aboutCss(path):
 @app.route('/game')
 def index2():
     return render_template('index2.html')
+
+@app.route('/register', methods=["POST"])
+def register():
+    uploadData = {}
+    uploadData["email"] = request.form.get("email")
+    uploadData["password"] = request.form.get("password")
+    print(request.form.get("email"))
+    print(request.form.get("password"))
+    #password not secure right now
+
+    login_collection.insert_one(uploadData)
+    return render_template('about.html')
+
+@app.route('/login',methods=["POST"])
+def login():
+   uploadData = {}
+   uploadData["email"] = request.form.get("email")
+   uploadData["password"] = request.form.get("password")
+   compare = login_collection.find_one(uploadData)
+
+   if compare == None:
+       return render_template("login.html")
+    
+   else:
+       del compare['_id']
+
+       if uploadData == compare:
+           return render_template("about.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=7878)
