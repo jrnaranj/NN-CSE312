@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import re
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
@@ -27,6 +28,14 @@ login_collection = db["Login"]
 
 
 print(connection_string)
+ 
+regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+def check(email):
+    if(re.fullmatch(regex, email)):
+        return True
+    else:
+        return False
 
 @app.route('/')
 def index():
@@ -54,12 +63,13 @@ def register():
     uploadData = {}
     uploadData["email"] = request.form.get("email")
     uploadData["password"] = request.form.get("password")
-    print(request.form.get("email"))
-    print(request.form.get("password"))
+    if (check(uploadData["email"])):
+        login_collection.insert_one(uploadData)
+        return render_template('about.html')
     #password not secure right now
 
-    login_collection.insert_one(uploadData)
-    return render_template('about.html')
+    else:
+        return render_template('index.html')
 
 @app.route('/login',methods=["POST"])
 def login():
