@@ -9,11 +9,15 @@
     {% endblock %}
 </head>
 <body>
-    <nav>
-        <a class="cname" href="/">Nautical Nonsense</a>
-        <a href="/game">Play</a>
-        <a href="/about">About Us</a>
-        <a href="/signin">Log In</a>
+    <nav class = "navbar">
+        <a href = "/" class = "nav-logo">NN</a>
+    <ul>
+        <li> <a href="/">Nautical Nonsense</a></li>
+        <li><a href="/game">Play</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/signin">Log In</a></li>
+        <li><a href="/signup">Register</a></li>
+    </ul>
     </nav>
     <div class="content">
         {% block content %}

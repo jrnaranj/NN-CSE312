@@ -39,11 +39,15 @@ def check(email):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('landing.html')
 
 @app.route('/signin')
 def signin():
     return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('register.html')
 
 @app.route('/about')
 def about():

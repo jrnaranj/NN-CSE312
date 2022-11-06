@@ -21,6 +21,7 @@
 
 
 .picture-row {
+    margin-top: 10%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -51,4 +52,10 @@
 
 .a-break {
     width: 100%;
+}
+
+h1{
+    font-size: 35px;
+    margin-top: 5%;
+    margin-left: 5%;
 }

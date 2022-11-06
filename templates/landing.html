@@ -1,0 +1,38 @@
+{% extends "navbar.html" %}
+{% block head %}
+{{ super() }}
+<title>Nautical Nonsense</title>
+{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nautical Nonsense</title>
+    <link href = "static/css/landing.css" rel = "stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@200&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <div class = "content">
+            <h1> Welcome to the Nautical Nonsense Experience</h1>
+            <p> Experience a fun rock paper scissors style game with online multiplayer that utilizies user accounts, databases, websockets, and much more..</p>
+            <a href="/signin">
+            <button class = "btns"> Get Started</button>
+        </a>
+            <a href="/about">
+            <button class = "btns"> Learn More</button>
+            </a>
+        </div>
+        <div>
+            <img src = "static/images/rps.png">
+        </div>
+    </main>
+    
+</body>
+</html>
+{% endblock %}
