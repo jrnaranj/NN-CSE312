@@ -1,0 +1,15 @@
+{% extends "navbar.html" %}
+{% block head %}
+{{ super() }}
+    <link rel="stylesheet" href="static/css/game.css">
+    <title>Game</title>
+{% endblock %}
+{% block content %}
+    <div class="game-modal">
+    <div class="game-options">
+        <img class="rock" src="static/svg/rock.svg"></img>
+        <img class="paper" src="static/svg/paper.svg"></img>
+        <img class="scissors" src="static/svg/scissors.svg"></img>
+    </div>
+    </div>
+{% endblock %}

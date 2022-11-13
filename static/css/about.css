@@ -1,4 +1,8 @@
 
+.content {
+    margin-top: 5%;
+}
+
 .a-picture {
     aspect-ratio: 1;
     clip-path: polygon(6.7% 25%, 50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%);
@@ -21,7 +25,7 @@
 
 
 .picture-row {
-    margin-top: 10%;
+    margin-top: 5%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -56,6 +60,5 @@
 
 h1{
     font-size: 35px;
-    margin-top: 5%;
     margin-left: 5%;
 }

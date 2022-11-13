@@ -60,7 +60,7 @@ def aboutCss(path):
 
 @app.route('/game')
 def index2():
-    return render_template('index2.html')
+    return render_template('game.html')
 
 @app.route('/register', methods=["POST"])
 def register():

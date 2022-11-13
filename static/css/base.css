@@ -16,7 +16,7 @@
     height: 80px;
     font-size: 18px;
     padding: 0 30px;
-    position: absolute;
+    position: relative;
     top:0;
     left:0;
     font-family: 'Karla';
@@ -59,19 +59,23 @@
     padding: 0 30px;
 }
 
+.navbar + * {
+    padding-top: 1px;
+}
+
 .navbar ul li a:hover{
     background-color: gray;
 }
 
 body {
     background-color: darkslategrey;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Karla';
     color: white;
 }
 
 .content{
     font-family: 'Karla';
     color: #d8d8d8;
-    margin-top: 5%;
+    margin-top: 2%;
 }
 

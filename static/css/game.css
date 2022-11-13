@@ -1,0 +1,29 @@
+.game-modal {
+    height: 75vmin;
+    border: 5px solid #d0d0d0;
+    position: relative;
+    background-color: rgba(112, 128, 144, 0.501);
+}
+
+.game-options {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+}
+
+.game-options img {
+    height: 15vw;
+    aspect-ratio: 1;
+}
+
+.rock {
+    transform: rotate(270deg) scaleY(-1);
+}
+
+.paper {
+    transform: rotate(90deg);
+}
+
+.scissors {
+    transform: rotate(180deg) scaleY(-1);
+}
