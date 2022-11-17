@@ -13,7 +13,7 @@
     border-bottom: 0.5px solid gray;
     width:100%;
     line-height: 80px;
-    height: 80px;
+    min-height: 80px;
     font-size: 18px;
     padding: 0 30px;
     position: relative;
@@ -68,6 +68,8 @@
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     background-color: darkslategrey;
     font-family: 'Karla';
     color: white;

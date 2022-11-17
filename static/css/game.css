@@ -1,6 +1,8 @@
+
 .game-modal {
-    height: 75vmin;
+    height: 90vh;
     border: 5px solid #d0d0d0;
+    margin: 5%;
     position: relative;
     background-color: rgba(112, 128, 144, 0.501);
 }

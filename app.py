@@ -7,14 +7,14 @@ import re
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
-load_dotenv('.env')
-password = os.environ.get("PASSWORD")
-print(password)
+# load_dotenv('.env')
+# password = os.environ.get("PASSWORD")
+# print(password)
 
 
 
-connection_string = "mongodb+srv://CSE312_NN:{}@cse312.pezegun.mongodb.net/test".format(password)
-client = MongoClient(connection_string)
+# connection_string = "mongodb+srv://CSE312_NN:{}@cse312.pezegun.mongodb.net/test".format(password)
+client = MongoClient('mongo')
 
 db = client["CSE312_Game"] #The name of the database is CSE312_Game
 #db.create_collection("Game Data") #Method to create a new collection in the CSE312_Game database.
@@ -27,7 +27,7 @@ login_collection = db["Login"]
 
 
 
-print(connection_string)
+# print(connection_string)
  
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
