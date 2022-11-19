@@ -4,8 +4,12 @@ import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import re
+from flask_socketio import SocketIO
+import json
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+
+socket = SocketIO(app)
 
 # load_dotenv('.env')
 # password = os.environ.get("PASSWORD")
@@ -30,6 +34,8 @@ login_collection = db["Login"]
 # print(connection_string)
  
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+users = []
 
 def check(email):
     if(re.fullmatch(regex, email)):
@@ -61,6 +67,17 @@ def aboutCss(path):
 @app.route('/game')
 def index2():
     return render_template('game.html')
+
+@socket.on('message')
+def handleMessage(msg):
+    msgDict = json.loads(msg)
+    if (msgDict["messageChoice"] == "rock"):
+        socket.send(json.dumps({"messageType":"rpsResult"}))
+
+#@app.route('/websocket')
+#def initsocket():
+
+#    return
 
 @app.route('/register', methods=["POST"])
 def register():
@@ -95,3 +112,4 @@ def login():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=7878)
+    socket.run(app)
