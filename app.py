@@ -1,15 +1,17 @@
-from fileinput import filename
-from flask import Flask, render_template, request
-import os
-from pymongo import MongoClient
-from dotenv import load_dotenv
-import re
-from flask_socketio import SocketIO
 import json
+import os
+import re
+from fileinput import filename
+
+from dotenv import load_dotenv
+from flask import Flask, render_template, request
+from flask_sock import Sock
+from pymongo import MongoClient
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
 
-socket = SocketIO(app)
+socket = Sock(app)
 
 # load_dotenv('.env')
 # password = os.environ.get("PASSWORD")
@@ -68,16 +70,12 @@ def aboutCss(path):
 def index2():
     return render_template('game.html')
 
-@socket.on('message')
-def handleMessage(msg):
-    msgDict = json.loads(msg)
-    if (msgDict["messageChoice"] == "rock"):
-        socket.send(json.dumps({"messageType":"rpsResult"}))
-
-#@app.route('/websocket')
-#def initsocket():
-
-#    return
+@socket.route('/websocket')
+def socketRoutine(ws):
+    print("Socket connected")
+    while True:
+        data = ws.receive()
+        ws.send(data)
 
 @app.route('/register', methods=["POST"])
 def register():
@@ -112,4 +110,4 @@ def login():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=7878)
-    socket.run(app)
+    # socket.run(app, debug=True, host="0.0.0.0", port=7878)
