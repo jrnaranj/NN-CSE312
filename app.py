@@ -3,10 +3,12 @@ import os
 import re
 from fileinput import filename
 
+from game_session import GameSession
 from dotenv import load_dotenv
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from flask_sock import Sock
 from pymongo import MongoClient
+import random
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
@@ -37,7 +39,10 @@ login_collection = db["Login"]
  
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-users = []
+games = {}
+user_to_game = {}
+
+users: dict[int, GameSession] = {}
 
 def check(email):
     if(re.fullmatch(regex, email)):
@@ -68,14 +73,41 @@ def aboutCss(path):
 
 @app.route('/game')
 def index2():
-    return render_template('game.html')
+    #mostly temp until we get lobbies working
+    if 0 in games:
+        user = games[0].add_user("User" + str(random.randint(0, 10000)))
+    else:
+        games[0] = GameSession() 
+        user = games[0].add_user("User" + str(random.randint(0, 10000)))
+    resp = make_response(render_template('game.html'))
+    if user:
+        user_to_game[user] = 0
+        resp.set_cookie('username', user)
+        resp.set_cookie('game_id', str(0))
+    return resp
 
 @socket.route('/websocket')
 def socketRoutine(ws):
     print("Socket connected")
+    user = request.cookies.get('username') #temp
+    game: GameSession = games[user_to_game[user]]
     while True:
         data = ws.receive()
-        ws.send(data)
+        if data == 'close':
+            game.remove_user(user)
+            user_to_game.pop(user)
+            break
+        jdata = json.loads(data)
+        if jdata["messageType"] == "rpsChoice":
+            winner = game.store_choice(user, jdata["messageChoice"])
+            if not winner:
+                ws.send(json.dumps({"messageType": "sorry"}))
+                continue
+            result = {
+                "messageType": "rpsResult",
+                "winner": winner
+            }
+            ws.send(json.dumps(result))
 
 @app.route('/register', methods=["POST"])
 def register():

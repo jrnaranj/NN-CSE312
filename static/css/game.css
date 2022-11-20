@@ -19,6 +19,14 @@
     aspect-ratio: 1;
 }
 
+#waiting {
+    display: none;
+}
+
+#winner {
+    display: none;
+}
+
 .rock {
     transform: rotate(270deg) scaleY(-1);
 }
