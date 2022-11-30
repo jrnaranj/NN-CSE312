@@ -100,14 +100,16 @@ def socketRoutine(ws):
         jdata = json.loads(data)
         if jdata["messageType"] == "rpsChoice":
             winner = game.store_choice(user, jdata["messageChoice"])
-            if not winner:
-                ws.send(json.dumps({"messageType": "sorry"}))
-                continue
+            #if not winner:
+                #ws.send(json.dumps({"messageType": "sorry"}))
+                #this message type isn't allowed currently
+                #continue
             result = {
                 "messageType": "rpsResult",
                 "winner": winner
             }
             ws.send(json.dumps(result))
+            game.reset_choices()
 
 @app.route('/register', methods=["POST"])
 def register():
