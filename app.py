@@ -1,5 +1,5 @@
 from fileinput import filename
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -52,6 +52,15 @@ def signup():
 @app.route('/about')
 def about():
     return render_template('about.html')
+    
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template('leaderboard.html')
+
+@app.route('/score')
+def score():
+    uploadData = {"Radin": 20, "Josh": 12, "Adrian": 19, "Jeff": 220}
+    return jsonify(uploadData)
 
 @app.route('/static/{path}')
 def aboutCss(path):
