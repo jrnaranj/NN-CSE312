@@ -23,6 +23,12 @@ db = client["CSE312_Game"] #The name of the database is CSE312_Game
 
 login_collection = db["Login"]
 
+score_collection = db["scores"] #Where the scores of the users will be stored once the users are implemented
+
+dummy_collection = db["dummy_scores"] # A collection for testing scores being displayed to the leadboard.
+
+
+
 
 
 
@@ -59,7 +65,12 @@ def leaderboard():
 
 @app.route('/score')
 def score():
-    uploadData = {"Radin": 20, "Josh": 12, "Adrian": 19, "Jeff": 220}
+    uploadData = {}
+
+    for item in dummy_collection.find():  #Testing databse retrieval 
+        del item['_id'] #Removes unwanted ID key
+        uploadData.update(item)
+
     return jsonify(uploadData)
 
 @app.route('/static/{path}')
