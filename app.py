@@ -1,4 +1,6 @@
 import json
+from fileinput import filename
+from flask import Flask, render_template, request, jsonify
 import os
 import re
 from fileinput import filename
@@ -30,6 +32,12 @@ db = client["CSE312_Game"] #The name of the database is CSE312_Game
 
 
 login_collection = db["Login"]
+
+score_collection = db["scores"] #Where the scores of the users will be stored once the users are implemented
+
+dummy_collection = db["dummy_scores"] # A collection for testing scores being displayed to the leadboard.
+
+
 
 
 
@@ -65,6 +73,20 @@ def signup():
 @app.route('/about')
 def about():
     return render_template('about.html')
+    
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template('leaderboard.html')
+
+@app.route('/score')
+def score():
+    uploadData = {}
+
+    for item in dummy_collection.find():  #Testing databse retrieval 
+        del item['_id'] #Removes unwanted ID key
+        uploadData.update(item)
+
+    return jsonify(uploadData)
 
 @app.route('/static/{path}')
 def aboutCss(path):

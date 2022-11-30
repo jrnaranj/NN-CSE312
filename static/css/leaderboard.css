@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+
 *{
     list-style: none;
     font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
+    font-size: 9px;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -19,7 +22,7 @@ body{
 
 .lboard_section{
     width: 500px;
-    height: 400px;
+    height: 1000px;
     margin: 100px auto 0;
     background: lightseagreen;
     border-radius: 5px;
