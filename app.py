@@ -1,6 +1,6 @@
 import json
 from fileinput import filename
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 import os
 import re
 from fileinput import filename
@@ -98,6 +98,9 @@ def index2():
     #mostly temp until we get lobbies working
     if 0 in games:
         user = games[0].add_user("User" + str(random.randint(0, 10000)))
+        if user == None:
+            resp = redirect("/")
+            return resp
     else:
         games[0] = GameSession() 
         user = games[0].add_user("User" + str(random.randint(0, 10000)))
