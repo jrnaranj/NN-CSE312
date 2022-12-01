@@ -48,9 +48,9 @@ dummy_collection = db["dummy_scores"] # A collection for testing scores being di
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 games = {}
-user_to_game = {}
+user_to_game: dict[int, GameSession] = {}
 
-users: dict[int, GameSession] = {}
+users = []
 
 def check(email):
     if(re.fullmatch(regex, email)):
@@ -96,17 +96,18 @@ def aboutCss(path):
 @app.route('/game')
 def index2():
     #mostly temp until we get lobbies working
-    if 0 in games:
-        user = games[0].add_user("User" + str(random.randint(0, 10000)))
+    gameID = 0
+    if gameID in games:
+        user = games[gameID].add_user("User" + str(random.randint(0, 10000)))
         if user == None:
             resp = redirect("/")
             return resp
     else:
-        games[0] = GameSession() 
-        user = games[0].add_user("User" + str(random.randint(0, 10000)))
-    resp = make_response(render_template('game.html'))
+        games[gameID] = GameSession() 
+        user = games[gameID].add_user("User" + str(random.randint(0, 10000)))
+    resp = make_response(render_template('game.html', gameID=gameID))
     if user:
-        user_to_game[user] = 0
+        user_to_game[user] = gameID
         resp.set_cookie('username', user)
         resp.set_cookie('game_id', str(0))
     return resp
