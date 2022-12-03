@@ -2,6 +2,7 @@ import json
 from fileinput import filename
 from flask import Flask, render_template, request, jsonify, redirect
 import os
+from threading import Lock
 import re
 from fileinput import filename
 
@@ -47,8 +48,11 @@ dummy_collection = db["dummy_scores"] # A collection for testing scores being di
  
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
+
 games = {}
 user_to_game: dict[int, GameSession] = {}
+open_game: int = -1
+open_mut: Lock = Lock()
 
 users = []
 
@@ -95,8 +99,18 @@ def aboutCss(path):
 
 @app.route('/game')
 def index2():
-    #mostly temp until we get lobbies working
-    gameID = 0
+    open_mut.acquire()
+    gameID = random.randint(0, 100000)
+    global open_game
+    if open_game >= 0:
+        gameID = open_game
+        open_game = -1
+    else:
+        while gameID in games.keys():
+            gameID = random.randint(0, 100000)
+        open_game = gameID
+    open_mut.release()
+
     if gameID in games:
         user = games[gameID].add_user("User" + str(random.randint(0, 10000)))
         if user == None:
@@ -109,7 +123,7 @@ def index2():
     if user:
         user_to_game[user] = gameID
         resp.set_cookie('username', user)
-        resp.set_cookie('game_id', str(0))
+        resp.set_cookie('game_id', str(gameID))
     return resp
 
 @socket.route('/websocket')
