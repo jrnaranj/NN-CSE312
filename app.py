@@ -93,6 +93,17 @@ def score():
 
     return jsonify(uploadData)
 
+@app.route('/profile')
+def profile():
+    return render_template('profilepage.html')
+
+@app.route('/score-history1',  methods=['GET', 'POST'])
+def score():
+    fakename= "Stanlee"
+    uploadData = {"name":fakename}
+
+    return jsonify(uploadData)
+
 @app.route('/static/{path}')
 def aboutCss(path):
     with open(path) as f:
