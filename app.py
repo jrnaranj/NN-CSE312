@@ -98,6 +98,11 @@ def leaderboard():
 
 @app.route('/profile')
 def profile():
+    auth = request.cookies.get('auth_token')
+
+    if auth == None:   #Checks if an auth token has been set
+        return render_template("profile_invalid.html")
+        
     return render_template('profilepage.html')
 
 @app.route('/score')
@@ -110,16 +115,25 @@ def score():
 
     return jsonify(uploadData)
 
-@app.route('/profile')
-def profile():
-    return render_template('profilepage.html')
 
 @app.route('/score-history1',  methods=['GET', 'POST'])
-def score():
-    fakename= "Stanlee"
-    uploadData = {"name":fakename}
+def score_history():
 
-    return jsonify(uploadData)
+   db_auth = None
+   auth = request.cookies.get('auth_token')
+   username = None
+
+   if auth != None:
+       hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
+       db_auth = login_collection.find_one({"auth_token": hashed_auth})
+       username = db_auth['email']
+
+   if username == None:
+       return render_template("profile_invalid.html")
+
+   uploadData = {"name":username}
+
+   return jsonify(uploadData)
 
 @app.route('/static/{path}')
 def aboutCss(path):
@@ -192,7 +206,7 @@ def register():
     if (check(uploadData["email"])):
         login_collection.insert_one(uploadData)
         return render_template('about.html')
-    #password not secure right now
+
 
     else:
         return render_template('index.html')
