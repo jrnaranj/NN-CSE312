@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-
-
-
 *{
     list-style: none;
     font-family: 'Montserrat', sans-serif;
@@ -22,7 +19,7 @@ body{
 
 .lboard_section{
     width: 500px;
-    height: 1000px;
+    height: 700px;
     margin: 100px auto 0;
     background: lightseagreen;
     border-radius: 5px;
@@ -37,7 +34,7 @@ body{
 }
 
 .lboard_section ul li{
-    margin-right: 50px;
+    margin-right: 150px;
     font-size: 18px;
     font-weight: 600;
     color: #3a3d51;
@@ -53,13 +50,13 @@ body{
 .lboard_wrap{
     position: absolute;
     top: 70px;
-    left: 40px;
+    left: 60px;
     width: 100%;
     height: 100%;
     border-radius: 5px;
 }
 .lboard_wrap .lboard_item{
-    padding-top: 25px;
+    padding-top: 10px;
 }
 
 .lboard_wrap .lboard_wrap .lboard_mem{
@@ -93,7 +90,12 @@ body{
 
 .lboard_wrap .lboard_mem .points{
 	width: 100px;
-	color: #3a3d51;
+    position: relative;
+    
+	/*color: #3a3d51;*/
+    color: black;
+    font-size: 19;
+
 }
 
 .lboard_wrap .lboard_mem .name_bar .bar_wrap{
