@@ -12,6 +12,7 @@ from flask import Flask, render_template, request, make_response
 from flask_sock import Sock
 from pymongo import MongoClient
 import random
+import bcrypt
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
@@ -155,7 +156,10 @@ def socketRoutine(ws):
 def register():
     uploadData = {}
     uploadData["email"] = request.form.get("email")
-    uploadData["password"] = request.form.get("password")
+    pass_bytes = request.form.get("password").encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_pass = bcrypt.hashpw(pass_bytes, salt)
+    uploadData["password"] = hashed_pass
     if (check(uploadData["email"])):
         login_collection.insert_one(uploadData)
         return render_template('about.html')
@@ -169,16 +173,23 @@ def login():
    uploadData = {}
    uploadData["email"] = request.form.get("email")
    uploadData["password"] = request.form.get("password")
-   compare = login_collection.find_one(uploadData)
+   compare = login_collection.find_one({"email": uploadData["email"]}) #Finds the dictionary in the database with the credentials for this email.
+
+
+
 
    if compare == None:
        return render_template("login.html")
     
-   else:
-       del compare['_id']
+   db_password = compare.get("password")
+   result = bcrypt.checkpw(uploadData["password"].encode('utf-8'), db_password) # Returns a boolean (whether or not password matches the one in the database)
 
-       if uploadData == compare:
-           return render_template("about.html")
+   if uploadData["email"] == compare["email"] and result == True: # If email and passwords match, redirect to about page.
+       del compare['_id']
+       return render_template("about.html")
+    
+   else:
+        return render_template("login.html")
 
 
 
