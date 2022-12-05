@@ -1,0 +1,21 @@
+{% extends "navbar.html" %}
+{% block head %}
+{{ super() }}
+    <title>Nautical Nonsense Rock Paper Scissors</title>
+{% endblock %}
+
+{% block content %}
+<div class="centerer" style="text-align: center;">
+<h1>Nautical Nonsense RPS Registration</h1>
+
+<br><br><br>
+
+<!--Server should handle registration on path /register-->
+
+<!--Body in format:
+    email=<email>&password=<password>   
+-->
+
+<p>You are currently logged in as {{user}} </p> 
+</div>
+{% endblock %}

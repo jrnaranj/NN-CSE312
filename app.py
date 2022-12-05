@@ -13,6 +13,9 @@ from flask_sock import Sock
 from pymongo import MongoClient
 import random
 import bcrypt
+import secrets
+import hashlib
+import string
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
@@ -69,7 +72,17 @@ def index():
 
 @app.route('/signin')
 def signin():
-    return render_template('login.html')
+   db_auth = None
+   auth = request.cookies.get('auth_token')
+
+   if auth != None:
+       hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
+       db_auth = login_collection.find_one({"auth_token": hashed_auth})
+
+   if db_auth != None:
+       return render_template('signedin.html',user=db_auth["email"])
+    
+   return render_template('login.html')
 
 @app.route('/signup')
 def signup():
@@ -82,6 +95,10 @@ def about():
 @app.route('/leaderboard')
 def leaderboard():
     return render_template('leaderboard.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profilepage.html')
 
 @app.route('/score')
 def score():
@@ -154,6 +171,7 @@ def socketRoutine(ws):
 
 @app.route('/register', methods=["POST"])
 def register():
+    
     uploadData = {}
     uploadData["email"] = request.form.get("email")
     pass_bytes = request.form.get("password").encode('utf-8')
@@ -170,11 +188,18 @@ def register():
 
 @app.route('/login',methods=["POST"])
 def login():
+
+
+   resp = make_response(render_template('profilepage.html'))
    uploadData = {}
    uploadData["email"] = request.form.get("email")
    uploadData["password"] = request.form.get("password")
    compare = login_collection.find_one({"email": uploadData["email"]}) #Finds the dictionary in the database with the credentials for this email.
 
+
+   alphabet = string.ascii_letters + string.digits
+   auth_token = ''.join(secrets.choice(alphabet) for i in range(10))
+   hashed_token = hashlib.sha256(auth_token.encode()).hexdigest() 
 
 
 
@@ -185,11 +210,16 @@ def login():
    result = bcrypt.checkpw(uploadData["password"].encode('utf-8'), db_password) # Returns a boolean (whether or not password matches the one in the database)
 
    if uploadData["email"] == compare["email"] and result == True: # If email and passwords match, redirect to about page.
+       resp.set_cookie('auth_token', auth_token)
+       login_collection.update_one({'email': uploadData['email']},{"$set":{'auth_token': hashed_token}})
        del compare['_id']
-       return render_template("about.html")
+       return resp
     
    else:
         return render_template("login.html")
+
+
+
 
 
 
