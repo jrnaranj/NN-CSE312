@@ -2,6 +2,7 @@ import json
 from fileinput import filename
 from flask import Flask, render_template, request, jsonify, redirect
 import os
+import logging
 from threading import Lock
 import re
 from fileinput import filename
@@ -169,24 +170,30 @@ def index2():
         resp.set_cookie('game_id', str(gameID))
     return resp
 
+
+
 @socket.route('/websocket')
 def socketRoutine(ws):
-    print("Socket connected")
+    logging.warning("Socket connected")
     user = request.cookies.get('username') #temp
     game: GameSession = games[user_to_game[user]]
     while True:
         data = ws.receive()
-        if data == 'close':
-            game.remove_user(user)
-            user_to_game.pop(user)
+        if data == 'close' or game.users == None:
+            ws.send(json.dumps({"messageType": "sorry"}))
+            logging.warning("Closing socket")
+            for u in game.users:
+                user_to_game.pop(u)
+            game.free_game()
+            games.pop(game.id)
             break
         jdata = json.loads(data)
         if jdata["messageType"] == "rpsChoice":
             winner = game.store_choice(user, jdata["messageChoice"])
-            #if not winner:
-                #ws.send(json.dumps({"messageType": "sorry"}))
+            if winner == "":
+                ws.send(json.dumps({"messageType": "sorry"}))
                 #this message type isn't allowed currently
-                #continue
+                continue
             result = {
                 "messageType": "rpsResult",
                 "winner": winner
@@ -205,7 +212,7 @@ def register():
     uploadData["password"] = hashed_pass
     if (check(uploadData["email"])):
         login_collection.insert_one(uploadData)
-        return render_template('about.html')
+        return redirect("/login")
 
 
     else:

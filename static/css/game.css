@@ -27,6 +27,10 @@
     display: none;
 }
 
+#broken {
+    display: none;
+}
+
 .rock {
     transform: rotate(270deg) scaleY(-1);
 }

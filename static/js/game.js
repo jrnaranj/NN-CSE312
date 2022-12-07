@@ -2,6 +2,16 @@
 const socket = new WebSocket('ws://' + window.location.host + '/websocket');
 console.log("connected")
 
+
+window.onload = function() {document.getElementById("broken").click()}
+
+window.onbeforeunload = function(e) {
+    e.preventDefault()
+    socket.send('close')
+    console.log("Closed connection")
+}
+
+
 // Called whenever data is received from the server over the WebSocket connection
 socket.onmessage = function (ws_message) {
     const message = JSON.parse(ws_message.data);
@@ -28,12 +38,15 @@ socket.onmessage = function (ws_message) {
                 setTimeout(endWait,3000)
             }
             break;
+        case "sorry":
+            document.getElementById("waiting").style.display = "none";
+            document.getElementById("game-modal").style.display = "none";
+            document.getElementById("broken").style.display = "block";
         default:
             console.log("Not using that type :(")
             console.log(ws_message.data)
     }
 }
-
 
 
 function sendMessage(choice) {

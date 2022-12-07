@@ -1,4 +1,5 @@
 import random
+import logging
 from threading import Barrier, Lock
 
 win_conditions = {"rock": "scissors", "scissors": "paper", "paper": "rock"}
@@ -21,10 +22,12 @@ class GameSession:
             self.lock.release()
             return None
 
-    def remove_user(self, username):
+    def free_game(self):
+        logging.warning("GameSession free: waiting at barrier")
         self.lock.acquire()
-        self.users.pop(username)
+        self.users = None
         self.lock.release()
+        self.check_wait.wait()
     
     def store_choice(self, username, choice):
         result = None
@@ -48,8 +51,11 @@ class GameSession:
             print("There has to be exactly 2 people in a room")
             return None
         self.check_wait.wait()
+        if self.users == None:
+            return ""
         prevUser = None
         for u in self.users:
+            logging.warning("Gamesession check_result: entered loop")
             user_choice = self.users[u]
             if not prevUser: prevUser = u
             else:
