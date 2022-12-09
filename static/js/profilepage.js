@@ -9,7 +9,7 @@ function get_user_history() {
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             const messages = JSON.parse(this.response);
-            append(messages["name"],100)
+            append(messages["name"],messages["wins"])
         }
     };
     request.open("GET", "/score-history1");
