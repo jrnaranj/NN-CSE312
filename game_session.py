@@ -10,6 +10,7 @@ class GameSession:
         self.id = id
         self.check_wait = Barrier(2)
         self.lock = Lock()
+        self.close_wait = Barrier(2)
     
     def add_user(self, username): 
         self.lock.acquire()
@@ -54,12 +55,19 @@ class GameSession:
         if self.users == None:
             return ""
         prevUser = None
+        self.lock.acquire()
         for u in self.users:
             logging.warning("Gamesession check_result: entered loop")
             user_choice = self.users[u]
             if not prevUser: prevUser = u
             else:
-                if win_conditions[self.users[prevUser]] == user_choice: return prevUser
-                elif win_conditions[user_choice] == self.users[prevUser]: return u
-                else: return "<draw>"
+                if win_conditions[self.users[prevUser]] == user_choice: 
+                    self.lock.release()
+                    return prevUser
+                elif win_conditions[user_choice] == self.users[prevUser]: 
+                    self.lock.release()
+                    return u
+                else: 
+                    self.lock.release()
+                    return "<draw>"
         
