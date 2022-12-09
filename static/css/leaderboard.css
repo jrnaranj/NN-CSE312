@@ -1,120 +1,70 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 *{
+    width: 100%;
+    min-height: 100%;
+
     list-style: none;
     font-family: 'Montserrat', sans-serif;
-    font-size: 9px;
+    font-size: 15px;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    
 }
-
-body{
-    background: darkslategray;
-}
-
-.wrapper{
-    width: 100%;
-    height: 100%;
-}
-
-.lboard_section{
-    width: 500px;
-    height: 700px;
-    margin: 100px auto 0;
-    background: lightseagreen;
-    border-radius: 5px;
-    padding: 25px 40px;
-    position: relative;
-
-}
-
-.lboard_section ul{
-    display:flex;
-
-}
-
-.lboard_section ul li{
-    margin-right: 150px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #3a3d51;
-    cursor: pointer;
-
-}
-
-.lboard_section ul li:hover,
-.lboard_section ul li.active{
-    color: darkblue
-}
-
-.lboard_wrap{
-    position: absolute;
-    top: 70px;
-    left: 60px;
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-}
-.lboard_wrap .lboard_item{
-    padding-top: 10px;
-}
-
-.lboard_wrap .lboard_wrap .lboard_mem{
+body {
+   
     display: flex;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #ffe773;
+    flex-direction: column;
+    background-color: darkslategrey;
+    font-family: 'Karla';
+    color: white;
+    padding-left:200px ;
+    padding-right:200px ;
+    padding-top:200px ;
+    padding-bottom:200px ;
+
+
+
 }
 
-.lboard_wrap .lboard_mem:first-child{
-	padding-top: 0;
+.lb {
+  
+
+    display: flex;
+    justify-content:right;
+    font-size: 30px;
+
+
 }
 
-.lboard_wrap .lboard_mem:last-child{
-	padding-bottom: 0;
-	border-bottom: 0;
-}
+.wrapper { 
 
-.lboard_wrap .lboard_mem .name_bar{
+    width: 70%;
+    height: 100%;
+    position: relative;
+    border: 5px solid black; 
+    background-color: lightslategray;
+
+    padding: 25px 40px;
+
+  }
+
+.lboard_tabs{
+
+
+   /* margin:0; */
+    position: absolute; 
+    left: 50%;
+
+    
+}   
+
+
+ .lboard_wrap .lboard_mem .name_bar{
+    
+
 	margin: 0 20px;
 	width: calc(100% - 150px);
+   
 }
 
-.lboard_wrap .lboard_mem .name_bar p{
-	color: #3a3d51;
-}
 
-.lboard_wrap .lboard_mem .name_bar p span{
-	margin-right: 5px;
-}
-
-.lboard_wrap .lboard_mem .points{
-	width: 100px;
-    position: relative;
-    
-	/*color: #3a3d51;*/
-    color: black;
-    font-size: 19;
-
-}
-
-.lboard_wrap .lboard_mem .name_bar .bar_wrap{
-	width: 100%;
-	height: 5px;
-	background: #d5b000;
-	margin-top: 5px;
-	border-radius: 5px;
-	position: relative;
-	overflow: hidden;
-}
-
-.lboard_wrap .lboard_mem .name_bar .bar_wrap .inner_bar{
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 5px;
-	background: #fff;
-	border-radius: 5px;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
-}
