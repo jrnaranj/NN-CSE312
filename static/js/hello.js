@@ -64,7 +64,7 @@ function append(pl, name, pts,perc){
 	inner_bar.innerHTML = width1
 	console.log(inner_bar)
 	inner_bar.style.width= width1
-	inner_bar.style.height = "10px"
+	inner_bar.style.height = "15px"
 	bar_wrap.appendChild(inner_bar)
 	const points = document.createElement("div")
 	points.classList.add('points')
