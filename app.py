@@ -186,6 +186,7 @@ def socketRoutine(ws):
                 user_to_game.pop(u)
             game.free_game()
             games.pop(game.id)
+            ws.close()
             break
         jdata = json.loads(data)
         if jdata["messageType"] == "rpsChoice":
