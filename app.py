@@ -45,11 +45,6 @@ dummy_collection = db["dummy_scores"] # A collection for testing scores being di
 
 
 
-for item in dummy_collection.find():  #Testing databse retrieval 
-    del item['_id'] #Removes unwanted ID key
-    print(item)
-
-
 
 
 

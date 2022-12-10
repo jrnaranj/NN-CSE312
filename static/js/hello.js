@@ -46,7 +46,8 @@ function welcome() {
 
 
 function append(pl, name, pts,perc){
-	width1 = parseInt(perc)+"%"
+	console.log(pts)
+	width1 = parseInt(pts)+"%"
 	console.log(width1)
 	const box = document.getElementsByClassName('lboard_mem');
     	box2= box[0]
@@ -58,7 +59,7 @@ function append(pl, name, pts,perc){
 	par.classList.add('name_bar')
 	par.innerHTML="<p><span>"+pl+".</span> "+name+" </p>"
 	const bar_wrap = document.createElement("div")
-	bar_wrap.classList.add('w3-light-grey', 'w3-round')
+	//bar_wrap.classList.add('w3-light-grey', 'w3-round')
 	const inner_bar = document.createElement("div")
 	inner_bar.classList.add('w3-container', 'w3-blue', 'w3-round')
 	inner_bar.innerHTML = width1
