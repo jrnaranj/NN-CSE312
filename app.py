@@ -96,7 +96,7 @@ def signin():
        db_auth = login_collection.find_one({"auth_token": hashed_auth})
 
    if db_auth != None:
-       return render_template('signedin.html',user=(db_auth["email"]).replace('<',"&lt;").replace('>',"&gt;"))
+       return render_template('signedin.html',user=(db_auth["email"]).replace('&', "&amp").replace('<',"&lt;").replace('>',"&gt;"))
     
    return render_template('login.html')
 
@@ -256,8 +256,8 @@ def socketRoutine(ws):
 def register():
     
     uploadData = {}
-    uploadData["email"] = request.form.get("email")
-    if (login_collection.find_one({"email":request.form.get("email")}) == None):
+    uploadData["email"] = request.form.get("email").replace('&', "&amp").replace('<',"&lt;").replace('>',"&gt;")
+    if (login_collection.find_one({"email": uploadData["email"]}) == None):
         pass_bytes = request.form.get("password").encode('utf-8')
         salt = bcrypt.gensalt()
         hashed_pass = bcrypt.hashpw(pass_bytes, salt)
@@ -281,7 +281,7 @@ def login():
 
    resp = make_response(render_template('profilepage.html'))
    uploadData = {}
-   uploadData["email"] = request.form.get("email")
+   uploadData["email"] = request.form.get("email").replace('&', "&amp").replace('<',"&lt;").replace('>',"&gt;")
    uploadData["password"] = request.form.get("password")
    compare = login_collection.find_one({"email": uploadData["email"]}) #Finds the dictionary in the database with the credentials for this email.
 
