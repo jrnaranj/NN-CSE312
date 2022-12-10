@@ -48,8 +48,8 @@ dummy_collection = db["dummy_scores"] # A collection for testing scores being di
 
 
 
-
 # print(connection_string)
+
  
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
@@ -60,6 +60,21 @@ open_game: int = -1
 open_mut: Lock = Lock()
 
 users = []
+
+def check_for_user(auth):
+    db_auth = None
+
+  
+
+    if auth != None:
+        hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
+        db_auth = login_collection.find_one({"auth_token": hashed_auth})
+
+        if db_auth != None:
+            return True
+    
+    else:
+        return False
 
 def check(email):
     if(re.fullmatch(regex, email)):
@@ -123,16 +138,21 @@ def score_history():
    db_auth = None
    auth = request.cookies.get('auth_token')
    username = None
+   score = None
 
    if auth != None:
        hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
        db_auth = login_collection.find_one({"auth_token": hashed_auth})
+       score_cur = dummy_collection.find({db_auth['email']:{}})
+
+       for i in score_cur:
+           score = i
        username = db_auth['email']
 
    if username == None:
        return render_template("profile_invalid.html")
 
-   uploadData = {"name":username}
+   uploadData = {"name":username, "wins": score}
 
    return jsonify(uploadData)
 
@@ -156,13 +176,36 @@ def index2():
     open_mut.release()
 
     if gameID in games:
-        user = games[gameID].add_user("User" + str(random.randint(0, 10000)))
+
+        user_add = "User" + str(random.randint(0, 10000))
+
+        if check_for_user(request.cookies.get('auth_token')) == True:
+            auth = request.cookies.get('auth_token')
+            hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
+            user_data = login_collection.find_one({"auth_token": hashed_auth})
+
+            if user_data != None:
+                user_add = user_data["email"]
+            
+
+        user = games[gameID].add_user(str(user_add))
+
         if user == None:
             resp = redirect("/")
             return resp
     else:
         games[gameID] = GameSession() 
-        user = games[gameID].add_user("User" + str(random.randint(0, 10000)))
+        user_add = "User" + str(random.randint(0, 10000))
+
+        if check_for_user(request.cookies.get('auth_token')) == True:
+            auth = request.cookies.get('auth_token')
+            hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
+            user_data = login_collection.find_one({"auth_token": hashed_auth})
+
+            if user_data !=  None:
+                user_add = user_data["email"]
+
+        user = games[gameID].add_user(str(user_add))
     resp = make_response(render_template('game.html', gameID=gameID))
     if user:
         user_to_game[user] = gameID
@@ -199,6 +242,7 @@ def socketRoutine(ws):
                 "messageType": "rpsResult",
                 "winner": winner
             }
+
             ws.send(json.dumps(result))
             game.reset_choices()
 
@@ -214,6 +258,7 @@ def register():
         uploadData["password"] = hashed_pass
     #if (check(uploadData["email"])):
         login_collection.insert_one(uploadData)
+        dummy_collection.insert_one({uploadData["email"]: 0})
         return redirect("/signin")
     #initialize a score
     else:
@@ -247,7 +292,7 @@ def login():
    db_password = compare.get("password")
    result = bcrypt.checkpw(uploadData["password"].encode('utf-8'), db_password) # Returns a boolean (whether or not password matches the one in the database)
 
-   if uploadData["email"] == compare["email"] and result == True: # If email and passwords match, redirect to about page.
+   if uploadData["email"] == compare["email"] and result == True: # If email and passwords match, set auth token.
        resp.set_cookie('auth_token', auth_token)
        login_collection.update_one({'email': uploadData['email']},{"$set":{'auth_token': hashed_token}})
        del compare['_id']
