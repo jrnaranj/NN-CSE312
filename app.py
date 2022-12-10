@@ -45,6 +45,11 @@ dummy_collection = db["dummy_scores"] # A collection for testing scores being di
 
 
 
+for item in dummy_collection.find():  #Testing databse retrieval 
+    del item['_id'] #Removes unwanted ID key
+    print(item)
+
+
 
 
 
@@ -127,7 +132,9 @@ def score():
 
     for item in dummy_collection.find():  #Testing databse retrieval 
         del item['_id'] #Removes unwanted ID key
-        uploadData.update(item)
+        username = item['username']
+        score = item['score']
+        uploadData.update({username:score})
 
     return jsonify(uploadData)
 
@@ -143,11 +150,10 @@ def score_history():
    if auth != None:
        hashed_auth = hashlib.sha256(auth.encode()).hexdigest()
        db_auth = login_collection.find_one({"auth_token": hashed_auth})
-       score_cur = dummy_collection.find({db_auth['email']:{}})
+       score_cur = dummy_collection.find_one({'username': db_auth['email']})
 
-       for i in score_cur:
-           score = i
-       username = db_auth['email']
+       username = score_cur["username"]
+       score = score_cur["score"]
 
    if username == None:
        return render_template("profile_invalid.html")
@@ -258,7 +264,7 @@ def register():
         uploadData["password"] = hashed_pass
     #if (check(uploadData["email"])):
         login_collection.insert_one(uploadData)
-        dummy_collection.insert_one({uploadData["email"]: 0})
+        dummy_collection.insert_one({"username":uploadData["email"], "score": 0})
         return redirect("/signin")
     #initialize a score
     else:
