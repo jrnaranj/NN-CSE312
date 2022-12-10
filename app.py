@@ -81,7 +81,7 @@ def signin():
        db_auth = login_collection.find_one({"auth_token": hashed_auth})
 
    if db_auth != None:
-       return render_template('signedin.html',user=db_auth["email"])
+       return render_template('signedin.html',user=(db_auth["email"]).replace('<',"&lt;").replace('>',"&gt;"))
     
    return render_template('login.html')
 
@@ -207,17 +207,22 @@ def register():
     
     uploadData = {}
     uploadData["email"] = request.form.get("email")
-    pass_bytes = request.form.get("password").encode('utf-8')
-    salt = bcrypt.gensalt()
-    hashed_pass = bcrypt.hashpw(pass_bytes, salt)
-    uploadData["password"] = hashed_pass
-    if (check(uploadData["email"])):
+    if (login_collection.find_one({"email":request.form.get("email")}) == None):
+        pass_bytes = request.form.get("password").encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed_pass = bcrypt.hashpw(pass_bytes, salt)
+        uploadData["password"] = hashed_pass
+    #if (check(uploadData["email"])):
         login_collection.insert_one(uploadData)
-        return redirect("/login")
-
-
+        return redirect("/signin")
+    #initialize a score
     else:
-        return render_template('index.html')
+        return redirect("/signup")
+
+
+
+    #else:
+    #    return render_template('index.html')
 
 @app.route('/login',methods=["POST"])
 def login():
