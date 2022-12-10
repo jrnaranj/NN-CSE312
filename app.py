@@ -244,6 +244,11 @@ def socketRoutine(ws):
                 "winner": winner
             }
 
+            cookieusername = request.cookies.get('username')
+            if (cookieusername and cookieusername in winner):
+                previousScore = dummy_collection.find_one({"username":cookieusername})
+                if (previousScore):
+                    dummy_collection.update_one({"username":cookieusername}, {"$set":{"score":previousScore["score"]+1}})
             ws.send(json.dumps(result))
             game.reset_choices()
 

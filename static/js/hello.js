@@ -71,7 +71,7 @@ function append(pl, name, pts,perc){
 	bar_wrap.appendChild(inner_bar)
 	const points = document.createElement("div")
 	points.classList.add('points')
-	points.textContent = " "+pts +"points"
+	points.textContent = " "+pts +" points"
 	console.log(par)
 	console.log(bar_wrap)
 	console.log(points)
